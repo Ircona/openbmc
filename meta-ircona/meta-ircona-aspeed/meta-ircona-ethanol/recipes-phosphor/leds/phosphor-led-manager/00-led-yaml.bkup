@@ -1,0 +1,37 @@
+diff --git a/led.yaml b/led.yaml
+index 6e90c5f..b8b9890 100755
+--- a/led.yaml
++++ b/led.yaml
+@@ -11,31 +11,7 @@ enclosure_fault:
+     rear_fault:
+         Action: 'On'
+ enclosure_identify:
+-    front_id:
+-        Action: 'Blink'
+-        DutyOn: 50
+-        Period: 1000
+-    rear_id:
+-        Action: 'Blink'
+-        DutyOn: 50
+-        Period: 1000
+-fan_fault:
+-    front_fault:
+-        Action: 'On'
+-    fan0:
+-        Action: 'On'
+-    rear_fault:
+-        Action: 'On'
+-fan_identify:
+-    front_id:
+-        Action: 'Blink'
+-        DutyOn: 50
+-        Period: 1000
+-    rear_id:
+-        Action: 'Blink'
+-        DutyOn: 50
+-        Period: 1000
+-    fan0:
++    identify:
+         Action: 'Blink'
+         DutyOn: 50
+         Period: 1000

@@ -1,0 +1,13 @@
+diff --git a/xyz/openbmc_project/State/Watchdog.interface.yaml b/xyz/openbmc_project/State/Watchdog.interface.yaml
+index da95d4c..d2eebed 100644
+--- a/xyz/openbmc_project/State/Watchdog.interface.yaml
++++ b/xyz/openbmc_project/State/Watchdog.interface.yaml
+@@ -32,7 +32,7 @@ properties:
+       type: enum[self.Action]
+       description: >
+           The action the watchdog should perform when it expires.
+-      default: 'HardReset'
++      default: 'None'
+     - name: Interval
+       type: uint64
+       description: >

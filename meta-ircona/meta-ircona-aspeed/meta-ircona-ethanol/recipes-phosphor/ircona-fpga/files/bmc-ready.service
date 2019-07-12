@@ -1,0 +1,12 @@
+[Unit]
+Description=Signal that the BMC is ready
+
+[Service]
+Restart=no
+RemainAfterExit=true
+Type=oneshot
+ExecStart=/usr/sbin/init_once.sh
+SyslogIdentifier=init_once.sh
+
+[Install]
+WantedBy=multi-user.target

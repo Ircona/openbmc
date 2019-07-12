@@ -1,0 +1,23 @@
+SUMMARY = "Ircona Telemetry"
+DESCRIPTION = "Telemetry for Sensor Monitoring"
+PR = "r1"
+PV = "1.0+git${SRCPV}"
+LICENSE = "CLOSED"
+
+SRC_URI += "git://github.com/SBoylan-Ircona/Telemetry.git"
+SRCREV = "0ac4d9204a94305cf896de0e9eefa260b663cee4"
+
+inherit cmake pkgconfig 
+
+
+DEPENDS += "\
+    phosphor-hwmon \
+    cli11 \
+    "
+
+S = "${WORKDIR}/git"
+
+do_install_append(){
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/build/Telemetry ${D}${bindir}
+}

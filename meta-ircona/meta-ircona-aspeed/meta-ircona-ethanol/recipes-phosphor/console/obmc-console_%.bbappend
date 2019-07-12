@@ -1,0 +1,3 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+OBMC_CONSOLE_HOST_TTY = "ttyS0"

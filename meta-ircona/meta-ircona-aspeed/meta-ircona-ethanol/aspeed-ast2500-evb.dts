@@ -1,0 +1,394 @@
+// SPDX-License-Identifier: GPL-2.0+
+/dts-v1/;
+
+#include "aspeed-g5.dtsi"
+#include <dt-bindings/gpio/aspeed-gpio.h>
+
+/ {
+	model = "ETHANOL X";
+	compatible = "aspeed,ast2500";
+
+	aliases {
+		serial4 = &uart5;
+	};
+
+	chosen {
+		stdout-path = &uart5;
+		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x20000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+//        vga_memory: framebuffer@bf000000 {
+//                no-map;
+//                reg = <0xbf000000 0x01000000>; /* 16M */
+//        };
+
+        flash_memory: region@20000000 {
+                no-map;
+                reg = <0x20000000 0x02000000>; /* 32M */
+        };
+
+		gfx_memory: framebuffer {
+			size = <0x01000000>;
+			alignment = <0x01000000>;
+			compatible = "shared-dma-pool";
+			reusable;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		heartbeat {
+			gpios = <&gpio ASPEED_GPIO(R, 4) GPIO_ACTIVE_LOW>;
+		};
+
+		power {
+			gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
+		};
+
+		identify {
+			gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	iio-hwmon-5vdual {
+		compatible = "iio-hwmon";
+		io-channels = <&adc 0>;
+	};
+
+	iio-hwmon-33vdual {
+		compatible = "iio-hwmon";
+		io-channels = <&adc 1>;
+	};
+
+	iio-hwmon-12v {
+		compatible = "iio-hwmon";
+		io-channels = <&adc 2>;
+	};
+	
+	iio-hwmon-5vrun {
+		compatible = "iio-hwmon";
+		io-channels = <&adc 3>;
+	};
+
+	iio-hwmon-33vrun {
+		compatible = "iio-hwmon";
+		io-channels = <&adc 4>;
+	};
+};
+
+&fmc {
+	status = "okay";
+	flash@0 {
+		status = "okay";
+		m25p,fast-read;
+		label = "bmc";
+		spi-max-frequency = <50000000>;
+#include "openbmc-flash-layout.dtsi"
+	};
+};
+
+&spi1 {
+	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_spi1_default>;
+	flash@0 {
+		status = "okay";
+		m25p,fast-read;
+		label = "pnor";
+		spi-max-frequency = <100000000>;
+	};
+};
+
+&spi2 {
+	status = "okay";
+};
+
+&lpc_ctrl {
+    status = "okay";
+    memory-region = <&flash_memory>;
+    flash = <&spi1>;
+};
+
+&uart1 {
+    /* Rear RS-232 connector */
+    status = "okay";
+
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_txd1_default
+            &pinctrl_rxd1_default
+            &pinctrl_nrts1_default
+            &pinctrl_ndtr1_default
+            &pinctrl_ndsr1_default
+            &pinctrl_ncts1_default
+            &pinctrl_ndcd1_default
+            &pinctrl_nri1_default>;
+};
+
+&uart2 {
+    status = "okay";
+};
+
+&uart5 {
+	status = "okay";
+};
+
+&mac0 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_rgmii1_default &pinctrl_mdio1_default>;
+};
+
+&mac1 {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
+};
+
+&i2c0 {
+    /* Advanced Power Management Link P0 */
+    status = "okay";
+};
+
+&i2c1 {
+    /* APML P1 */
+    status = "okay";
+};
+
+&i2c2 {
+    /* FPGA */
+    status = "okay";
+};
+
+&i2c3 {
+    /* 24LC128 EEPROM */
+	status = "okay";
+
+	eeprom@50 {
+		compatible = "microchip,24c128", "atmel,24c128";
+		reg = <0x50>;
+		pagesize = <64>;
+	};
+};
+
+&i2c4 {
+    /* P0 Power Regulators */
+    status = "okay";
+
+    /* ISL68147 @61h */
+};
+
+&i2c5 {
+    /* P1 Power Regulators */
+    status = "okay";
+
+    /* ISL68147 @61h */
+};
+
+&i2c6 {
+    /* P1 NVME Controller */
+    status = "okay";
+};
+
+&i2c7 {
+    /* LM75 Temp Sensors */
+	status = "okay";
+    
+    lm75@48 {
+        compatible = "ti,lm75";
+        reg = <0x48>;
+    };
+    
+    lm75@49 {
+        compatible = "ti,lm75";
+        reg = <0x49>;
+    };
+
+    lm75@4a {
+        compatible = "ti,lm75";
+        reg = <0x4a>;
+    };
+
+	lm75@4b {
+		compatible = "ti,lm75";
+		reg = <0x4b>;
+	};
+
+    lm75@4c {
+        compatible = "ti,lm75";
+        reg = <0x4c>;
+    };
+
+    lm75@4d {
+        compatible = "ti,lm75";
+        reg = <0x4d>;
+    };
+
+    lm75@4e {
+        compatible = "ti,lm75";
+        reg = <0x4e>;
+    };
+
+    lm75@4f {
+        compatible = "ti,lm75";
+        reg = <0x4f>;
+    };
+
+};
+
+&i2c8 {
+    /* BMC I2C on P0 */
+    status = "okay";
+};
+
+&pwm_tacho {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm0_default
+        &pinctrl_pwm1_default
+        &pinctrl_pwm2_default
+        &pinctrl_pwm3_default
+        &pinctrl_pwm4_default
+        &pinctrl_pwm5_default
+        &pinctrl_pwm6_default
+        &pinctrl_pwm7_default>;
+
+    /* P0 */
+	fan@0 {
+		reg = <0x00>;
+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+	};
+
+    /* P1 */
+	fan@1 {
+		reg = <0x01>;
+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
+	};
+
+    /* System Fans */
+    fan@2 {
+        reg = <0x02>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+    };
+
+    fan@3 {
+        reg = <0x03>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x03>;
+    };
+
+    fan@4 {
+        reg = <0x04>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x04>;
+    };
+
+    fan@5 {
+        reg = <0x05>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x05>;
+    };
+
+    fan@6 {
+        reg = <0x06>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x06>;
+    };
+
+    fan@7 {
+        reg = <0x07>;
+        aspeed,fan-tach-ch = /bits/ 8 <0x07>;
+    };
+
+};
+
+&gpio {
+
+	board_id0 {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "board_id0";
+	};
+	board_id1 {
+	        gpio-hog;
+                gpios = <ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
+                input;
+                line-name = "board_id1";
+	};
+	board_id2 {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "board_id2";
+	};
+	board_id3{
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "board_id3";
+	};
+	pcie_disconnected {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "pcie_disconnected";
+	};
+	usb_disconnected {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 5) GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "usb_disconnected";
+	};
+	mgmt_spare0 {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "mgmt_spare0";
+	};
+	mgmt_spare1 {
+		gpio-hog;
+		gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "mgmt_spare1";
+	};
+};
+
+/*
+ * Enable port A as device (via the virtual hub) and port B as
+ * host by default on the eval board. This can be easily changed
+ * by replacing the override below with &ehci0 { ... } to enable
+ * host on both ports.
+ */
+&vhub {
+	status = "okay";
+};
+
+&ehci1 {
+	status = "okay";
+};
+
+&uhci {
+	status = "okay";
+};
+
+&gfx {
+     status = "okay";
+     memory-region = <&gfx_memory>;
+};
+
+&adc {
+	status = "okay";
+};
+
+&vuart {
+    status = "okay";
+};

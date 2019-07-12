@@ -1,0 +1,13 @@
+diff --git a/app/configuration/controllers/firmware-controller.html b/app/configuration/controllers/firmware-controller.html
+index 6863ae5..8af4f33 100644
+--- a/app/configuration/controllers/firmware-controller.html
++++ b/app/configuration/controllers/firmware-controller.html
+@@ -16,7 +16,7 @@
+     <h2 class="inline bold">Specify image file location</h2>
+   </div>
+   <form id="firmware__upload-form" role="form" class="firmware__upload-form">
+-    <p>Specify an image file located on your workstation or a TFTP server. An image file may contain firmware images for the server, BMC, or other hardware devices. Each image that you upload will be unpacked from the image file and added to the appropriate list above.</p>
++    <p>Specify an image file located on your workstation or a TFTP server. An image file may contain firmware images for the server, BMC, or other hardware devices. Each image that you upload will be unpacked from the image file and added to the appropriate list above. Please provide the image in a .tar format</p>
+     <div class=" column firmware__upload-station">
+       <h3>Upload image file from workstation</h3>
+       <p>Select the image file saved on the workstation storage medium to upload to the server BMC.</p>
